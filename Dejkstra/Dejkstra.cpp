@@ -27,7 +27,7 @@ void ReadGraphFromFile(ifstream& F, vector<vector<int>>& graph) // чтение 
 void DijkstrasAlgorythm(vector<vector<int>>& graph, int n, int& s)
 {
     vector<pair<int, int>> metka(n, make_pair(INF, 0));
-    metka[s-1] = make_pair(0, 1);
+    metka[s-1] = make_pair(0, s);
     vector<bool> k_metka(n, false);
     k_metka[s-1] = true;
     int kon = s-1;
@@ -60,7 +60,10 @@ void DijkstrasAlgorythm(vector<vector<int>>& graph, int n, int& s)
         for (int i = 0; i < n; i++)
         {
             if (!k_metka[i] && graph[kon][i] > 0)
-                metka[i] = make_pair(min(graph[kon][i] + metka[kon].first, metka[i].first), kon + 1);
+            {
+                int dist = min(graph[kon][i] + metka[kon].first, metka[i].first);
+                metka[i] = make_pair(dist, (dist == metka[i].first) ? (metka[i].second) : (kon + 1));
+            }
         }
 
         cout << "  " << step << "    ";
@@ -119,7 +122,7 @@ int main()
 
     int n;
     Fin >> n;
-    vector<vector<int>> graph(n, vector<int>(n, -1));
+    vector<vector<int>> graph(n, vector<int>(n, INF));
 
     ReadGraphFromFile(Fin, graph);
 
